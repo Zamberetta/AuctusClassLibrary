@@ -69,19 +69,19 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
         [TestMethod]
         public void Logger_Array_Arg_Test()
         {
-            var date = new DateTime(2023, 03, 20);
+            var date = "20/03/2023";
             var hiTime = new TimeSpan(14, 17, 32);
             var hiTemp = 62.1m;
             var loTime = new TimeSpan(3, 16, 10);
             var loTemp = 54.8m;
 
-            mockProtocol.Logger("Temperature on 20/03/2023:   14:17:32: 62.1 degrees (hi)   03:16:10: 54.8 degrees (lo)", null, LogType.Information, LogLevel.LogEverything);
+            mockProtocol.Logger("Temperature on 20/03/2023: 14:17:32: 62.1 degrees (hi) 03:16:10: 54.8 degrees (lo)", null, LogType.Information, LogLevel.LogEverything);
 
-            mockProtocol.LastLogEntry.Should().Be("1|5|QA123|TR456|Logger_Array_Arg_Test|Temperature on 20/03/2023:   14:17:32: 62.1 degrees (hi)   03:16:10: 54.8 degrees (lo)");
+            mockProtocol.LastLogEntry.Should().Be("1|5|QA123|TR456|Logger_Array_Arg_Test|Temperature on 20/03/2023: 14:17:32: 62.1 degrees (hi) 03:16:10: 54.8 degrees (lo)");
 
-            mockProtocol.Logger("Temperature on {0:d}:{1,11}: {2} degrees (hi){3,11}: {4} degrees (lo)", new object[] { date, hiTime, hiTemp, loTime, loTemp }, LogType.Information, LogLevel.LogEverything);
+            mockProtocol.Logger("Temperature on {0}: {1}: {2} degrees (hi) {3}: {4} degrees (lo)", new object[] { date, hiTime, hiTemp, loTime, loTemp }, LogType.Information, LogLevel.LogEverything);
 
-            mockProtocol.LastLogEntry.Should().Be("1|5|QA123|TR456|Logger_Array_Arg_Test|Temperature on 20/03/2023:   14:17:32: 62.1 degrees (hi)   03:16:10: 54.8 degrees (lo)");
+            mockProtocol.LastLogEntry.Should().Be("1|5|QA123|TR456|Logger_Array_Arg_Test|Temperature on 20/03/2023: 14:17:32: 62.1 degrees (hi) 03:16:10: 54.8 degrees (lo)");
         }
 
         [TestMethod]
@@ -197,9 +197,7 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
         [TestMethod]
         public void Logger_Object_Test()
         {
-            var dt = (object)new DateTime(1, 1, 1, 9, 52, 45);
-
-            mockProtocol.Logger(dt, LogType.Information, LogLevel.DevelopmentLogging);
+            mockProtocol.Logger((object)"01/01/0001 9:52:45 AM", LogType.Information, LogLevel.DevelopmentLogging);
 
             mockProtocol.LastLogEntry.Should().Be("1|-1|QA123|TR456|Logger_Object_Test|01/01/0001 9:52:45 AM");
 
