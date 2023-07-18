@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <RootNamespace>Auctus.DataMiner.Library</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Auctus Class Library</Title>
+    <Authors>Aston</Authors>
+    <Company />
+	<NeutralLanguage>en</NeutralLanguage>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageTags>Skyline;DataMiner</PackageTags>
+	<Description>A library providing extensions, functions and methods to aid the development of Skyline DataMiner Protocols and Automation Scripts.</Description>
+    <RepositoryUrl>https://github.com/AstonXBG/Auctus-Class-Library</RepositoryUrl>
+    <PackageId>AuctusClassLibrary</PackageId>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
+    <PackageProjectUrl>https://zamberetta.gitbook.io/auctus-class-library/</PackageProjectUrl>
+    <PackageIcon>Icon.png</PackageIcon>
+    <RepositoryType></RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Skyline.DataMiner.Files.QActionHelperBaseClasses" Version="10.0.10" />
+    <PackageReference Include="Skyline.DataMiner.Files.SLManagedAutomation" Version="10.0.10" />
+    <PackageReference Include="Skyline.DataMiner.Files.SLManagedScripting" Version="10.0.10" />
+    <PackageReference Include="Skyline.DataMiner.Files.SLNetTypes" Version="10.0.10" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Docs\Icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

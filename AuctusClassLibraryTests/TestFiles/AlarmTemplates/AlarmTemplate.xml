@@ -1,0 +1,18 @@
+﻿<Template>
+	<Name>Demo Protocol</Name>
+	<Description>Detailed Description</Description>
+	<Type>template</Type>
+	<InterpreteVersion>1</InterpreteVersion>
+	<Protocol>
+		<Name>Demo Protocol</Name>
+		<Version>1.0.0.1</Version>
+	</Protocol>
+	<Conditions>
+	</Conditions>
+	<Schedule enabled="False">
+	</Schedule>
+	<Params>
+	</Params>
+	<Templates>
+	</Templates>
+</Template>
