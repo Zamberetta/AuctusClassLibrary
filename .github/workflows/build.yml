@@ -40,8 +40,7 @@ jobs:
       - name: Install Coverlet
         shell: powershell
         run: |
-          New-Item -Path .\.coverlet -ItemType Directory
-          dotnet tool update coverlet.collector --tool-path .\.coverlet
+          dotnet tool update --global coverlet.console
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -50,5 +49,5 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Zamberetta_AuctusClassLibrary" /o:"zamberetta" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
-          .\.coverlet\coverlet ".\AuctusClassLibraryTests\bin\Debug\net462\AuctusClassLibraryTests.dll" --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
+          coverlet ".\AuctusClassLibraryTests\bin\Debug\net462\AuctusClassLibraryTests.dll" --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
