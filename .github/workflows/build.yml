@@ -1,4 +1,4 @@
-name: SonarCloud
+name: Build
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Build and analyze
+    name: Build and Analyze
     runs-on: windows-latest
     steps:
       - name: Set up JDK 11
@@ -40,8 +40,9 @@ jobs:
       - name: Install Coverlet
         shell: powershell
         run: |
-          dotnet tool update --global coverlet.console
-      - name: Build and analyze
+          New-Item -Path .\.coverlet -ItemType Directory
+          dotnet tool update coverlet.console --tool-path .\.coverlet
+      - name: Build and Analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -49,5 +50,18 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Zamberetta_AuctusClassLibrary" /o:"zamberetta" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml
           dotnet build
-          coverlet ".\AuctusClassLibraryTests\bin\Debug\net462\AuctusClassLibraryTests.dll" --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
+          .\.coverlet\coverlet ".\AuctusClassLibraryTests\bin\Debug\net462\AuctusClassLibraryTests.dll" --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+  test:
+    name: Run Tests
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
