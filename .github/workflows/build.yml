@@ -45,6 +45,13 @@ jobs:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Cache Coverlet
+        id: cache-coverlet
+        uses: actions/cache@v3
+        with:
+          path: .\.coverlet
+          key: ${{ runner.os }}-coverlet
+          restore-keys: ${{ runner.os }}-coverlet
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
