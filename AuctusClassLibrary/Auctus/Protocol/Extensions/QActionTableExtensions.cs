@@ -311,19 +311,7 @@
         public static object FillArray<TQActionTableRow>(this QActionTable table, List<TQActionTableRow> rows, DateTime? timeInfo = null)
             where TQActionTableRow : QActionTableRow, new()
         {
-            return table.Protocol.FillArray(table.TableId, rows, timeInfo);
-        }
-
-        /// <summary>Replace all the rows in the target table using the specified data.</summary>
-        /// <typeparam name="TQActionTableRow">The QActionTableRow type representing the table row.</typeparam>
-        /// <param name="protocol">Instance that implements SLProtocol.</param>
-        /// <param name="tableId">The ID of the table parameter.</param>
-        /// <param name="rows">The row data.</param>
-        /// <param name="timeInfo">Time stamp.</param>
-        public static object FillArray<TQActionTableRow>(this SLProtocol protocol, int tableId, List<TQActionTableRow> rows, DateTime? timeInfo = null)
-            where TQActionTableRow : QActionTableRow, new()
-        {
-            return protocol.FillArray(tableId, rows.ToArray(), timeInfo);
+            return table.FillArray(rows.ToArray<QActionTableRow>(), timeInfo);
         }
 
         /// <summary>Update and Append rows in the target table using the specified data.</summary>
@@ -334,19 +322,7 @@
         public static object FillArrayNoDelete<TQActionTableRow>(this QActionTable table, List<TQActionTableRow> rows, DateTime? timeInfo = null)
             where TQActionTableRow : QActionTableRow, new()
         {
-            return table.Protocol.FillArrayNoDelete(table.TableId, rows.ToArray(), timeInfo);
-        }
-
-        /// <summary>Update and Append rows in the target table using the specified data.</summary>
-        /// <typeparam name="TQActionTableRow">The QActionTableRow type representing the table row.</typeparam>
-        /// <param name="protocol">Instance that implements SLProtocol.</param>
-        /// <param name="tableId">The ID of the table parameter.</param>
-        /// <param name="rows">The row data.</param>
-        /// <param name="timeInfo">Time stamp.</param>
-        public static object FillArrayNoDelete<TQActionTableRow>(this SLProtocol protocol, int tableId, List<TQActionTableRow> rows, DateTime? timeInfo = null)
-            where TQActionTableRow : QActionTableRow, new()
-        {
-            return protocol.FillArrayNoDelete(tableId, rows.ToArray(), timeInfo);
+            return table.FillArrayNoDelete(rows.ToArray<QActionTableRow>(), timeInfo);
         }
     }
 }

@@ -501,22 +501,6 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
         }
 
         [TestMethod]
-        public void FillArray_Protocol_Test()
-        {
-            mockBasicTable.RowCount.Should().Be(2);
-
-            var rows = new List<MockbasictableQActionRow>() {
-                secondRow,
-                thirdRow,
-                fourthRow,
-            };
-
-            mockProtocol.FillArray(Mockbasictable.tablePid, rows);
-
-            mockBasicTable.RowCount.Should().Be(3);
-        }
-
-        [TestMethod]
         public void FillArrayNoDelete_QActionTable_Test()
         {
             mockBasicTable.AddRow(thirdRow);
@@ -544,36 +528,6 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
             stringValue = (string)mockProtocol.GetParameterIndexByKey(Mockbasictable.tablePid, "3", Mockbasictable.Idx.mockbasictablestringvalue_1002 + 1);
 
             stringValue.Should().Be("MNO");
-        }
-
-        [TestMethod]
-        public void FillArrayNoDelete_Protocol_Test()
-        {
-            mockBasicTable.AddRow(fourthRow);
-            mockBasicTable.RowCount.Should().Be(3);
-
-            var doubleValue = (double)mockProtocol.GetParameterIndexByKey(Mockbasictable.tablePid, "4", Mockbasictable.Idx.mockbasictabledoublevalue_1003 + 1);
-
-            doubleValue.Should().Be(456.789);
-
-            var customRow = new MockbasictableQActionRow(fourthRow)
-            {
-                Mockbasictabledoublevalue_1003 = 567.890
-            };
-
-            var rows = new List<MockbasictableQActionRow>() {
-                firstRow,
-                secondRow,
-                customRow,
-            };
-
-            mockProtocol.FillArrayNoDelete(Mockbasictable.tablePid, rows);
-
-            mockBasicTable.RowCount.Should().Be(5);
-
-            doubleValue = (double)mockProtocol.GetParameterIndexByKey(Mockbasictable.tablePid, "4", Mockbasictable.Idx.mockbasictabledoublevalue_1003 + 1);
-
-            doubleValue.Should().Be(567.890);
         }
     }
 }

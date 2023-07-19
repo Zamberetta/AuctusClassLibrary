@@ -228,19 +228,17 @@ namespace Auctus.Class.Library.Tests
 
             table.ClearTable();
 
-            foreach (var column in columns)
+            var columnCount = columns.Length;
+            var rowCount = ((object[])columns[table.Index]).Length;
+
+            for (var i = 0; i < rowCount; i++)
             {
-                if (column == null) continue;
+                var row = new object[columnCount];
 
-                object[] row;
-
-                if (column.GetType().BaseType == typeof(QActionTableRow))
+                for (var j = 0; j < columnCount; j++)
                 {
-                    row = ((QActionTableRow)column).ToObjectArray();
-                }
-                else
-                {
-                    row = (object[])column;
+                    var value = ((object[])columns[j])[i];
+                    row.SetValue(value, j);
                 }
 
                 AddRow(tableId, row);
@@ -267,20 +265,17 @@ namespace Auctus.Class.Library.Tests
         public object FillArrayNoDelete(int tableId, object[] columns, DateTime? timeInfo)
         {
             var table = MockTables.GetTable(ElementName, tableId);
+            var columnCount = columns.Length;
+            var rowCount = ((object[])columns[table.Index]).Length;
 
-            foreach (var column in columns)
+            for (var i = 0; i < rowCount; i++)
             {
-                if (column == null) continue;
+                var row = new object[columnCount];
 
-                object[] row;
-
-                if (column.GetType().BaseType == typeof(QActionTableRow))
+                for (var j = 0; j < columnCount; j++)
                 {
-                    row = ((QActionTableRow)column).ToObjectArray();
-                }
-                else
-                {
-                    row = (object[])column;
+                    var value = ((object[])columns[j])[i];
+                    row.SetValue(value, j);
                 }
 
                 var key = (string)row[table.Index];

@@ -22,6 +22,7 @@
     <PackageIcon>Icon.png</PackageIcon>
     <RepositoryType></RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />

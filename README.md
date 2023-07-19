@@ -6,6 +6,8 @@
 
 The Auctus Class Library provides a multitude of functions and extensions to help with the development of DataMiner Protocols (Drivers) and Automation Scripts. The library has been developed to use very few dependencies, making it easy to integrate it into your solution.
 
+Package available at [NuGet][NuGetPackage].
+
 Documentation available over at [GitBook](https://zamberetta.gitbook.io/auctus-class-library/).
 
 ## License
