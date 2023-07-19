@@ -5,7 +5,8 @@
     <RootNamespace>Auctus.DataMiner.Library</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Auctus Class Library</Title>
-    <Authors>Aston</Authors>
+    <Authors>Zamberetta</Authors>
+	<VersionPrefix>1.0.1</VersionPrefix>
     <Company />
 	<NeutralLanguage>en</NeutralLanguage>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
@@ -14,15 +15,17 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageTags>Skyline;DataMiner</PackageTags>
 	<Description>A library providing extensions, functions and methods to aid the development of Skyline DataMiner Protocols and Automation Scripts.</Description>
-    <RepositoryUrl>https://github.com/AstonXBG/Auctus-Class-Library</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Zamberetta/AuctusClassLibrary</RepositoryUrl>
     <PackageId>AuctusClassLibrary</PackageId>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
-    <PackageProjectUrl>https://zamberetta.gitbook.io/auctus-class-library/</PackageProjectUrl>
+    <PackageProjectUrl></PackageProjectUrl>
     <PackageIcon>Icon.png</PackageIcon>
     <RepositoryType></RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <FileVersion>$(VersionPrefix)</FileVersion>
+    <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
