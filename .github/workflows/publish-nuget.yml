@@ -1,4 +1,4 @@
-name: Build
+name: Publish Nuget
 on:
   push:
     tags:
