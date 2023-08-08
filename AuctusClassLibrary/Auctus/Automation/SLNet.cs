@@ -18,7 +18,7 @@ namespace Auctus.DataMiner.Library.Automation
         ///   SetDataMinerInfoResponseMessage
         /// </returns>
         /// <exception cref="ArgumentException">File Path cannot be null, empty or white space.</exception>
-        public static SetDataMinerInfoResponseMessage SendDmsFileChange(Engine engine, string filePath)
+        public static SetDataMinerInfoResponseMessage SendDmsFileChange(IEngine engine, string filePath)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <returns>
         ///   SetDataMinerInfoResponseMessage
         /// </returns>
-        public static SetDataMinerInfoResponseMessage ChangeCommunicationState(Engine engine, int dataMinerId, int elementId, bool isResponding, bool dve = false, int connectionID = 0)
+        public static SetDataMinerInfoResponseMessage ChangeCommunicationState(IEngine engine, int dataMinerId, int elementId, bool isResponding, bool dve = false, int connectionID = 0)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <returns>
         ///   The specified ResponseMessage type.
         /// </returns>
-        public static T GetInfo<T>(Engine engine, InfoTypeSingle type) where T : DMSMessage
+        public static T GetInfo<T>(IEngine engine, InfoTypeSingle type) where T : DMSMessage
         {
             try
             {
@@ -128,7 +128,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <returns>
         ///   The specified ResponseMessage type.
         /// </returns>
-        public static IEnumerable<T> GetInfo<T>(Engine engine, InfoTypeArray type) where T : DMSMessage
+        public static IEnumerable<T> GetInfo<T>(IEngine engine, InfoTypeArray type) where T : DMSMessage
         {
             try
             {
@@ -167,7 +167,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// or
         /// Failed to Add Document
         /// </exception>
-        public static AddDocumentResponseMessage AddDocument(Engine engine, string documentPath, string documentName, byte[] document)
+        public static AddDocumentResponseMessage AddDocument(IEngine engine, string documentPath, string documentName, byte[] document)
         {
             try
             {
@@ -223,7 +223,7 @@ namespace Auctus.DataMiner.Library.Automation
             }
         }
 
-        private static AddDocumentResponseMessage AddDocument(Engine engine, string documentPath, string documentName, int bufferSize)
+        private static AddDocumentResponseMessage AddDocument(IEngine engine, string documentPath, string documentName, int bufferSize)
         {
             try
             {
@@ -248,7 +248,7 @@ namespace Auctus.DataMiner.Library.Automation
             }
         }
 
-        private static void PushDocument(Engine engine, int fileNumber, byte[] document)
+        private static void PushDocument(IEngine engine, int fileNumber, byte[] document)
         {
             var serverDetails = engine.GetUserConnection().ServerDetails;
 
@@ -264,7 +264,7 @@ namespace Auctus.DataMiner.Library.Automation
             engine.SendSLNetMessage(message);
         }
 
-        private static void UpdateDocumentBufferSize(Engine engine, int fileNumber, int bufferSize)
+        private static void UpdateDocumentBufferSize(IEngine engine, int fileNumber, int bufferSize)
         {
             var serverDetails = engine.GetUserConnection().ServerDetails;
 
@@ -279,7 +279,7 @@ namespace Auctus.DataMiner.Library.Automation
             engine.SendSLNetMessage(message);
         }
 
-        private static void SetDocumentEof(Engine engine, int fileNumber)
+        private static void SetDocumentEof(IEngine engine, int fileNumber)
         {
             var serverDetails = engine.GetUserConnection().ServerDetails;
 

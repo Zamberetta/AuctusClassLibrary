@@ -15,7 +15,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logType">Specifies the log type.</param>
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
-        public static void Logger(this Engine engine, string message, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, string message, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             engine.Log($"ID{engine.InstanceId}|{memberName}|{message}", logType, logLevel);
         }
@@ -27,7 +27,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, Exception exception, LogType logType = LogType.Error, int logLevel = 1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, Exception exception, LogType logType = LogType.Error, int logLevel = 1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, $"Exception => {exception.GetType()} {exception.Message}{Environment.NewLine}{exception.StackTrace}", logType, logLevel, memberName);
         }
@@ -40,7 +40,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, string format, object arg0, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, string format, object arg0, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, string.Format(format, arg0), logType, logLevel, memberName);
         }
@@ -54,7 +54,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, string format, object arg0, object arg1, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, string format, object arg0, object arg1, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, string.Format(format, arg0, arg1), logType, logLevel, memberName);
         }
@@ -69,7 +69,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, string format, object arg0, object arg1, object arg2, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, string format, object arg0, object arg1, object arg2, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, string.Format(format, arg0, arg1, arg2), logType, logLevel, memberName);
         }
@@ -81,7 +81,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logType">Specifies the log type.</param>
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
-        public static void Logger(this Engine engine, string format, object[] arg, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, string format, object[] arg, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             if (arg == null)
             {
@@ -100,7 +100,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, bool value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, bool value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, value ? "True" : "False", logType, logLevel, memberName);
         }
@@ -112,7 +112,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, char value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, char value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, value.ToString(), logType, logLevel, memberName);
         }
@@ -124,7 +124,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, char[] buffer, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, char[] buffer, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, buffer, 0, buffer.Length, logType, logLevel, memberName);
         }
@@ -142,7 +142,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// or
         /// count - Count cannot be less than 0.</exception>
         /// <exception cref="System.ArgumentException">Count cannot be bigger than the offsetted buffer.</exception>
-        public static void Logger(this Engine engine, char[] buffer, int index, int count, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, char[] buffer, int index, int count, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             if (buffer == null)
             {
@@ -181,7 +181,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, double value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, double value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, value.ToString(), logType, logLevel, memberName);
         }
@@ -193,7 +193,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, decimal value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, decimal value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, value.ToString(), logType, logLevel, memberName);
         }
@@ -205,7 +205,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, float value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, float value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, value.ToString(), logType, logLevel, memberName);
         }
@@ -217,7 +217,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, int value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, int value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, value.ToString(), logType, logLevel, memberName);
         }
@@ -229,7 +229,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, uint value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, uint value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, value.ToString(), logType, logLevel, memberName);
         }
@@ -241,7 +241,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, long value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, long value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, value.ToString(), logType, logLevel, memberName);
         }
@@ -253,7 +253,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
         [MethodImpl]
-        public static void Logger(this Engine engine, ulong value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, ulong value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             Logger(engine, value.ToString(), logType, logLevel, memberName);
         }
@@ -264,7 +264,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <param name="logType">Specifies the log type.</param>
         /// <param name="logLevel">Specifies the log level.</param>
         /// <param name="memberName">The method or property name that invoked this method.</param>
-        public static void Logger(this Engine engine, object value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
+        public static void Logger(this IEngine engine, object value, LogType logType = LogType.Information, int logLevel = -1, [CallerMemberName] string memberName = "")
         {
             if (value != null)
             {

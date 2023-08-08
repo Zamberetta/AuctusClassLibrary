@@ -12,7 +12,7 @@
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageTags>Skyline;DataMiner</PackageTags>
 	<Description>A library providing extensions, functions and methods to aid the development of Skyline DataMiner Protocols and Automation Scripts.</Description>
     <RepositoryUrl>https://github.com/Zamberetta/AuctusClassLibrary</RepositoryUrl>
