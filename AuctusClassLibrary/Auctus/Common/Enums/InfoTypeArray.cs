@@ -3,6 +3,11 @@
     public enum InfoTypeArray
     {
         /// <returns>
+        ///   GetDataMinerInfoResponseMessage
+        /// </returns>
+        DataMinerInfo = 0,
+
+        /// <returns>
         ///   ElementInfoEventMessage
         /// </returns>
         ElementInfo = 3,
@@ -28,6 +33,11 @@
         TrendingTemplates = 9,
 
         /// <returns>
+        ///   GetProtocolInformationsResponseMessage
+        /// </returns>
+        ProtocolInformations = 10,
+
+        /// <returns>
         ///   GetProtocolsResponseMessage
         /// </returns>
         Protocols = 11,
@@ -46,11 +56,6 @@
         ///   ServiceInfoEventMessage
         /// </returns>
         LocalServiceInfo = 25,
-
-        /// <returns>
-        ///   GeneralInfoEventMessage
-        /// </returns>
-        LocalGeneralInfoMessage = 27,
 
         /// <returns>
         ///   LoginInfoResponseMessage
@@ -96,6 +101,21 @@
         ///   InterfaceConnectionInfoEventMessage
         /// </returns>
         InterfaceConnectionInfo = 56,
+
+        /// <returns>
+        ///   DcpUpdateBlobEvent
+        /// </returns>
+        AvailableDcpUpdates = 57,
+
+        /// <returns>
+        ///   AvailableUpgradePackageEvent
+        /// </returns>
+        AvailableUpgradePackages = 61,
+
+        /// <returns>
+        ///   ElementConnectionInfoEventMessage
+        /// </returns>
+        ElementConnections = 63,
 
         /// <returns>
         ///   LiteProtocolInfoEventMessage

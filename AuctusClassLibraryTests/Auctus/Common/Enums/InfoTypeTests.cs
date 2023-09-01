@@ -71,7 +71,6 @@ namespace Auctus.DataMiner.Library.Common.Enum.Tests
             var excludedEnums = new List<string>() {
                 "QueuedMessages",
                 "RedundancyInfo",
-                "ProtocolInformations",
                 "SNMPManagers",
                 "Plugins",
                 "AllPlugins",
@@ -81,10 +80,8 @@ namespace Auctus.DataMiner.Library.Common.Enum.Tests
                 "SecureRegisteredClients",
                 "SecureUnregisteredClients",
                 "SecureClients",
-                "AvailableDcpUpdates",
                 "AggregatorElementInfo",
                 "OEMInfo",
-                "ElementConnections",
                 "ProviderThemeDefinitions",
                 "IndexingConfiguration",
             };

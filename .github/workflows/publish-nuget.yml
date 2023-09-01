@@ -7,6 +7,8 @@ jobs:
   publish-nuget:
     name: Publish Nuget
     runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
         with:
@@ -18,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore /p:Version=${env:VERSION}
       - name: Test
         run: dotnet test --no-restore --verbosity normal
       - name: Package
@@ -27,13 +29,10 @@ jobs:
         working-directory: ./bin/nuget
         run: dotnet nuget push "*.nupkg" -k "${{secrets.NUGET_API_KEY}}" -s https://api.nuget.org/v3/index.json --skip-duplicate
       - name: Create Release
-        uses: actions/create-release@v1
+        uses: ncipollo/release-action@v1.13.0
         id: create_release
         with:
-          draft: false
-          prerelease: false
-          release_name: ${{ steps.version.outputs.version }}
-          tag_name: ${{ github.ref }}
-          body_path: CHANGELOG.md
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+          allowUpdates: true
+          draft: true
+          bodyFile: CHANGELOG.md
+          artifacts: "*.nupkg"

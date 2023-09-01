@@ -3,11 +3,6 @@
     public enum InfoTypeSingle
     {
         /// <returns>
-        ///   GetDataMinerInfoResponseMessage
-        /// </returns>
-        DataMinerInfo = 0,
-
-        /// <returns>
         ///   ClientSecurityChangeEventMessage
         /// </returns>
         ClientSecurity = 2,
@@ -56,6 +51,11 @@
         ///   GetDataMinerInfoResponseMessage
         /// </returns>
         LocalDataMinerInfo = 21,
+
+        /// <returns>
+        ///   GeneralInfoEventMessage
+        /// </returns>
+        LocalGeneralInfoMessage = 27,
 
         /// <returns>
         ///   VersionInfoResponseMessage
@@ -138,11 +138,6 @@
         BackupSettings = 60,
 
         /// <returns>
-        ///   AvailableUpgradePackageEvent
-        /// </returns>
-        AvailableUpgradePackages = 61,
-
-        /// <returns>
         ///   GetUpgradeDefaultOptionsResponseMessage
         /// </returns>
         DefaultUpgradeOptions = 62,
@@ -156,6 +151,11 @@
         ///   ConfigurationDataEvent
         /// </returns>
         ConfigurationData = 67,
+
+        /// <returns>
+        ///   IndexingConfiguration
+        /// </returns>
+        IndexingConfiguration = 68,
 
         /// <returns>
         ///   GetIconsResponse
