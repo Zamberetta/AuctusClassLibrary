@@ -2,11 +2,14 @@
 
 namespace Auctus.DataMiner.Library.Protocol
 {
+    using global::Auctus.DataMiner.Library.Auctus.Common.Shared;
     using Skyline.DataMiner.Scripting;
     using System;
     using System.Runtime.CompilerServices;
-    using System.Text;
 
+    /// <summary>
+    ///   Logging extension methods for SLProtocol.
+    /// </summary>
     public static class ProtocolLogger
     {
         /// <summary>Logs the specified string value.</summary>
@@ -144,34 +147,9 @@ namespace Auctus.DataMiner.Library.Protocol
         /// <exception cref="System.ArgumentException">Count cannot be bigger than the offsetted buffer.</exception>
         public static void Logger(this SLProtocol protocol, char[] buffer, int index, int count, LogType logType = LogType.Allways, LogLevel logLevel = LogLevel.DevelopmentLogging, [CallerMemberName] string memberName = "")
         {
-            if (buffer == null)
-            {
-                throw new ArgumentNullException(nameof(buffer), "Buffer cannot be null.");
-            }
+            var message = LoggerExtensibility.BufferToString(buffer, index, count);
 
-            if (index < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index), "Index cannot be less than 0.");
-            }
-
-            if (count < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count), "Count cannot be less than 0.");
-            }
-
-            if (buffer.Length - index < count)
-            {
-                throw new ArgumentException("Count cannot be bigger than the offsetted buffer.");
-            }
-
-            var stringbuilder = new StringBuilder();
-
-            for (int i = 0; i < count; i++)
-            {
-                stringbuilder.Append(buffer[index + i]);
-            }
-
-            Logger(protocol, stringbuilder.ToString(), logType, logLevel, memberName);
+            Logger(protocol, message, logType, logLevel, memberName);
         }
 
         /// <summary>Logs the text representation of the specified double-precision floating-point value.</summary>

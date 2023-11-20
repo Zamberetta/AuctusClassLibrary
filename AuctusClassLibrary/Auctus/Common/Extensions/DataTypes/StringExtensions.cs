@@ -3,6 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace Auctus.DataMiner.Library.Common.Type
 {
+    /// <summary>
+    ///   Extension methods for the string type.
+    /// </summary>
     public static class StringExtensions
     {
         /// <summary>Converts the string representation to its corresponding enumeration.</summary>

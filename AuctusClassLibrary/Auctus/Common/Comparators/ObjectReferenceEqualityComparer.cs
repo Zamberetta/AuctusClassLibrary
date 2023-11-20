@@ -9,7 +9,7 @@ namespace Auctus.DataMiner.Library.Common.Comparators
     /// instead of value equality (<see cref="object.Equals(object)"/>) when comparing two object instances.
     /// </summary>
     /// <remarks>
-    /// The <see cref="ReferenceEqualityComparer"/> type cannot be instantiated. Instead, use the <see cref="Instance"/> property
+    /// The <see cref="ObjectReferenceEqualityComparer"/> type cannot be instantiated. Instead, use the <see cref="Instance"/> property
     /// to access the singleton instance of this type.
     /// </remarks>
     public sealed class ObjectReferenceEqualityComparer : IEqualityComparer<object>, IEqualityComparer

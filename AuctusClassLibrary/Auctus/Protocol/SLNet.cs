@@ -2,28 +2,28 @@
 using Auctus.DataMiner.Library.Auctus.Common.Shared;
 using Auctus.DataMiner.Library.Common;
 using Auctus.DataMiner.Library.Common.SLNetType;
-using Skyline.DataMiner.Automation;
 using Skyline.DataMiner.Net.Messages;
 using Skyline.DataMiner.Net.Messages.Advanced;
+using Skyline.DataMiner.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Auctus.DataMiner.Library.Automation
+namespace Auctus.DataMiner.Library.Protocol
 {
     /// <summary>
-    /// SLNet methods aiding with automation script development.
+    /// SLNet methods aiding with protocol script development.
     /// </summary>
     public static class SLNet
     {
         /// <summary>Triggers a file sync on the DMS for the target file, note that the target file must be on the same DMA to which this call is being triggered from.</summary>
-        /// <param name="engine">Interfaces with the DataMiner System from an Automation script.</param>
+        /// <param name="protocol">Instance that implements SLProtocol.</param>
         /// <param name="filePath">The target file to sync (local path on the DMA).</param>
         /// <returns>
         /// <see cref="SetDataMinerInfoResponseMessage"/>
         /// </returns>
         /// <exception cref="ArgumentException">File Path cannot be null, empty or white space.</exception>
-        public static SetDataMinerInfoResponseMessage SendDmsFileChange(IEngine engine, string filePath)
+        public static SetDataMinerInfoResponseMessage SendDmsFileChange(SLProtocol protocol, string filePath)
         {
             try
             {
@@ -32,28 +32,26 @@ namespace Auctus.DataMiner.Library.Automation
                     throw new ArgumentException("File Path cannot be null, empty or white space.");
                 }
 
-                var serverDetails = engine.GetUserConnection().ServerDetails;
-
                 var message = new SetDataMinerInfoMessage
                 {
-                    DataMinerID = serverDetails.AgentID,
-                    HostingDataMinerID = serverDetails.AgentID,
+                    DataMinerID = protocol.DataMinerID,
+                    HostingDataMinerID = protocol.DataMinerID,
                     IInfo2 = 32,
                     StrInfo1 = filePath,
                     What = (int)NotifyType.SendDmsFileChange,
                 };
 
-                return engine.SendSLNetSingleResponseMessage(message) as SetDataMinerInfoResponseMessage;
+                return protocol.SLNet.SendSingleResponseMessage(message) as SetDataMinerInfoResponseMessage;
             }
             catch (Exception ex)
             {
-                engine.Logger(ex);
+                protocol.Logger(ex);
                 return null;
             }
         }
 
         /// <summary>Sets the communication state for an element or DVE.</summary>
-        /// <param name="engine">Interfaces with the DataMiner System from an Automation script.</param>
+        /// <param name="protocol">Instance that implements SLProtocol.</param>
         /// <param name="dataMinerId">The target DataMiner agent ID.</param>
         /// <param name="elementId">The target Element ID.</param>
         /// <param name="isResponding">Whether the element should be set to responding [<c>true</c>] or timeout [<c>false</c>].</param>
@@ -62,7 +60,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <returns>
         /// <see cref="SetDataMinerInfoResponseMessage"/>
         /// </returns>
-        public static SetDataMinerInfoResponseMessage ChangeCommunicationState(IEngine engine, int dataMinerId, int elementId, bool isResponding, bool dve = false, int connectionID = 0)
+        public static SetDataMinerInfoResponseMessage ChangeCommunicationState(SLProtocol protocol, int dataMinerId, int elementId, bool isResponding, bool dve = false, int connectionID = 0)
         {
             try
             {
@@ -90,23 +88,23 @@ namespace Auctus.DataMiner.Library.Automation
                     What = (int)NotifyType.NT_CHANGE_COMMUNICATION_STATE,
                 };
 
-                return engine.SendSLNetSingleResponseMessage(message) as SetDataMinerInfoResponseMessage;
+                return protocol.SLNet.SendSingleResponseMessage(message) as SetDataMinerInfoResponseMessage;
             }
             catch (Exception ex)
             {
-                engine.Logger(ex);
+                protocol.Logger(ex);
                 return null;
             }
         }
 
         /// <summary>Generic method, supporting multiple GetInfo calls that return a single response.</summary>
         /// <typeparam name="T">The expected ResponseMessage that is returned by the target call.</typeparam>
-        /// <param name="engine">Interfaces with the DataMiner System from an Automation script.</param>
+        /// <param name="protocol">Instance that implements SLProtocol.</param>
         /// <param name="type">The target GetInfo call.</param>
         /// <returns>
         ///   The specified ResponseMessage type.
         /// </returns>
-        public static T GetInfo<T>(IEngine engine, InfoTypeSingle type) where T : DMSMessage
+        public static T GetInfo<T>(SLProtocol protocol, InfoTypeSingle type) where T : DMSMessage
         {
             try
             {
@@ -117,23 +115,23 @@ namespace Auctus.DataMiner.Library.Automation
                     Type = (InfoType)type
                 };
 
-                return engine.SendSLNetSingleResponseMessage(message) as T;
+                return protocol.SLNet.SendSingleResponseMessage(message) as T;
             }
             catch (Exception ex)
             {
-                engine.Logger(ex);
+                protocol.Logger(ex);
                 return null;
             }
         }
 
         /// <summary>Generic method, supporting multiple GetInfo calls that return an array of responses.</summary>
         /// <typeparam name="T">The expected ResponseMessage that is returned by the target call.</typeparam>
-        /// <param name="engine">Interfaces with the DataMiner System from an Automation script.</param>
+        /// <param name="protocol">Instance that implements SLProtocol.</param>
         /// <param name="type">The target GetInfo call.</param>
         /// <returns>
         ///   The specified ResponseMessage type.
         /// </returns>
-        public static IEnumerable<T> GetInfo<T>(IEngine engine, InfoTypeArray type) where T : DMSMessage
+        public static IEnumerable<T> GetInfo<T>(SLProtocol protocol, InfoTypeArray type) where T : DMSMessage
         {
             try
             {
@@ -144,19 +142,19 @@ namespace Auctus.DataMiner.Library.Automation
                     Type = (InfoType)type
                 };
 
-                var response = engine.SendSLNetMessage(message);
+                var response = protocol.SLNet.SendMessage(message);
 
                 return response.CastDMSMessage<T>();
             }
             catch (Exception ex)
             {
-                engine.Logger(ex);
+                protocol.Logger(ex);
                 return new List<T>();
             }
         }
 
         /// <summary>Retrieves all available alarm templates for a given protocol and version.</summary>
-        /// <param name="engine">Interfaces with the DataMiner System from an Automation script.</param>
+        /// <param name="protocol">Instance that implements SLProtocol.</param>
         /// <param name="protocolName">Name of the target protocol.</param>
         /// <param name="protocolVersion">The target protocol version.</param>
         /// <param name="includeTemplates">If <c>true</c> templates are included in the response.</param>
@@ -167,7 +165,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <exception cref="System.ArgumentException">Protocol Name cannot be null, empty or white space.
         /// or
         /// Protocol Version cannot be null, empty or white space.</exception>
-        public static GetAvailableAlarmTemplatesResponse GetAvailableAlarmTemplates(IEngine engine, string protocolName, string protocolVersion, bool includeTemplates = true, bool includeGroups = true)
+        public static GetAvailableAlarmTemplatesResponse GetAvailableAlarmTemplates(SLProtocol protocol, string protocolName, string protocolVersion, bool includeTemplates = true, bool includeGroups = true)
         {
             try
             {
@@ -189,21 +187,22 @@ namespace Auctus.DataMiner.Library.Automation
                     ProtocolVersion = protocolVersion,
                 };
 
-                return engine.SendSLNetSingleResponseMessage(message) as GetAvailableAlarmTemplatesResponse;
+                return protocol.SLNet.SendSingleResponseMessage(message) as GetAvailableAlarmTemplatesResponse;
             }
             catch (Exception ex)
             {
-                engine.Logger(ex);
+                protocol.Logger(ex);
                 return null;
             }
         }
 
         /// <summary>Updates, adds, renames or deletes a given alarm template.</summary>
-        /// <param name="engine">Interfaces with the DataMiner System from an Automation script.</param>
+        /// <param name="protocol">Instance that implements SLProtocol.</param>
         /// <param name="definition">The alarm template definition.</param>
         /// <param name="originalName">The original alarm template name.</param>
         /// <param name="updateType">The update type to be made.</param>
-        public static void UpdateAlarmTemplate(IEngine engine, AlarmTemplateEventMessage definition, string originalName, UpdateAlarmTemplateType updateType)
+        /// <exception cref="System.ArgumentException">Original Name cannot be null, empty or white space.</exception>
+        public static void UpdateAlarmTemplate(SLProtocol protocol, AlarmTemplateEventMessage definition, string originalName, UpdateAlarmTemplateType updateType)
         {
             if (string.IsNullOrWhiteSpace(originalName))
             {
@@ -217,11 +216,11 @@ namespace Auctus.DataMiner.Library.Automation
                 UpdateType = updateType,
             };
 
-            engine.SendSLNetMessage(message);
+            protocol.SLNet.SendMessage(message);
         }
 
         /// <summary>Deletes the target document from the system.</summary>
-        /// <param name="engine">Interfaces with the DataMiner System from an Automation script.</param>
+        /// <param name="protocol">Instance that implements SLProtocol.</param>
         /// <param name="element">The target element/protocol name the document resides in.</param>
         /// <param name="document">The document name and extension.</param>
         /// <exception cref="System.ArgumentException">
@@ -229,7 +228,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// or
         /// Document cannot be null, empty or white space.
         /// </exception>
-        public static void DeleteDocument(IEngine engine, string element, string document)
+        public static void DeleteDocument(SLProtocol protocol, string element, string document)
         {
             if (string.IsNullOrWhiteSpace(element))
             {
@@ -246,11 +245,11 @@ namespace Auctus.DataMiner.Library.Automation
                 Element = element,
             };
 
-            engine.SendSLNetMessage(message);
+            protocol.SLNet.SendMessage(message);
         }
 
         /// <summary>Retrieves all documents within the DMS for a given folder.</summary>
-        /// <param name="engine">Interfaces with the DataMiner System from an Automation script.</param>
+        /// <param name="protocol">Instance that implements SLProtocol.</param>
         /// <param name="folder">The target documents folder.</param>
         /// <param name="recursive">If <c>true</c> all documents in sub-folders are also retrieved.</param>
         /// <returns>
@@ -259,7 +258,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <exception cref="System.ArgumentException">Folder cannot be null, empty or white space.
         /// or
         /// Failed to get a valid documents response.</exception>
-        public static List<DmaDocument> GetAvailableDocuments(IEngine engine, string folder, bool recursive = false)
+        public static List<DmaDocument> GetAvailableDocuments(SLProtocol protocol, string folder, bool recursive = false)
         {
             try
             {
@@ -274,7 +273,7 @@ namespace Auctus.DataMiner.Library.Automation
                     Recursive = recursive,
                 };
 
-                var response = engine.SendSLNetSingleResponseMessage(message) as GetDocumentsResponseMessage;
+                var response = protocol.SLNet.SendSingleResponseMessage(message) as GetDocumentsResponseMessage;
 
                 if (response == null)
                 {
@@ -285,13 +284,13 @@ namespace Auctus.DataMiner.Library.Automation
             }
             catch (Exception ex)
             {
-                engine.Logger(ex);
+                protocol.Logger(ex);
                 return new List<DmaDocument>();
             }
         }
 
         /// <summary>Retrieves a file in a DataMiner Documents folder.</summary>
-        /// <param name="engine">Interfaces with the DataMiner System from an Automation script.</param>
+        /// <param name="protocol">Instance that implements SLProtocol.</param>
         /// <param name="documentPath">The DataMiner document path that file resides.</param>
         /// <param name="documentName">The name of the document to retrieve.</param>
         /// <returns>
@@ -300,7 +299,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// <exception cref="System.ArgumentException">Document Path cannot be null, empty or white space.
         /// or
         /// Document Name cannot be null, empty or white space.</exception>
-        public static byte[] GetDocument(IEngine engine, string documentPath, string documentName)
+        public static byte[] GetDocument(SLProtocol protocol, string documentPath, string documentName)
         {
             try
             {
@@ -314,7 +313,7 @@ namespace Auctus.DataMiner.Library.Automation
                     throw new ArgumentException("Document Name cannot be null, empty or white space.");
                 }
 
-                var getBinaryFileResponse = GetBinaryFile(engine, documentPath, documentName);
+                var getBinaryFileResponse = GetBinaryFile(protocol, documentPath, documentName);
 
                 var buffer = new byte[getBinaryFileResponse.Size];
                 var bufferSize = getBinaryFileResponse.Size > 65536 ? 65536 : getBinaryFileResponse.Size;
@@ -325,35 +324,35 @@ namespace Auctus.DataMiner.Library.Automation
 
                 for (int i = 0; i < iterations; i++)
                 {
-                    var response = PullDocument(engine, fileNumber, offset, bufferSize);
+                    var response = PullDocument(protocol, fileNumber, offset, bufferSize);
                     Buffer.BlockCopy(response.Ba.Ba, 0, buffer, offset, bufferSize);
                     offset += bufferSize;
                 }
 
                 if (remainder > 0)
                 {
-                    var response = PullDocument(engine, fileNumber, offset, remainder);
+                    var response = PullDocument(protocol, fileNumber, offset, remainder);
                     Buffer.BlockCopy(response.Ba.Ba, 0, buffer, offset, remainder);
                 }
 
-                SetDocumentEof(engine, fileNumber);
+                SetDocumentEof(protocol, fileNumber);
 
                 return buffer;
             }
             catch (Exception ex)
             {
-                engine.Logger(ex);
+                protocol.Logger(ex);
                 return Array.Empty<byte>();
             }
         }
 
         /// <summary>Adds or updates a file in the DataMiner Documents folder.</summary>
-        /// <param name="engine">Interfaces with the DataMiner System from an Automation script.</param>
+        /// <param name="protocol">Instance that implements SLProtocol.</param>
         /// <param name="documentPath">The DataMiner document path that file will be added/updated to.</param>
         /// <param name="documentName">The name of the document to add/update.</param>
         /// <param name="document">The byte[] of the document to be added/updated.</param>
         /// <returns>
-        /// <see cref="AddDocumentResponseMessage"/>
+        ///   AddDocumentResponseMessage
         /// </returns>
         /// <exception cref="System.ArgumentException">
         /// Document Path cannot be null, empty or white space.
@@ -364,7 +363,7 @@ namespace Auctus.DataMiner.Library.Automation
         /// or
         /// Failed to Add Document
         /// </exception>
-        public static AddDocumentResponseMessage AddDocument(IEngine engine, string documentPath, string documentName, byte[] document)
+        public static AddDocumentResponseMessage AddDocument(SLProtocol protocol, string documentPath, string documentName, byte[] document)
         {
             try
             {
@@ -384,7 +383,7 @@ namespace Auctus.DataMiner.Library.Automation
                 }
 
                 var bufferSize = document.Length > 65536 ? 65536 : document.Length;
-                var addDocumentResponse = AddDocument(engine, documentPath, documentName, bufferSize);
+                var addDocumentResponse = AddDocument(protocol, documentPath, documentName, bufferSize);
 
                 if (addDocumentResponse == null)
                 {
@@ -398,29 +397,29 @@ namespace Auctus.DataMiner.Library.Automation
 
                 for (int i = 0; i < iterations; i++)
                 {
-                    PushDocument(engine, fileNumber, document.Skip(offset).Take(bufferSize).ToArray());
+                    PushDocument(protocol, fileNumber, document.Skip(offset).Take(bufferSize).ToArray());
                     offset += bufferSize;
                 }
 
                 if (remainder > 0)
                 {
-                    UpdateDocumentBufferSize(engine, fileNumber, remainder);
-                    PushDocument(engine, fileNumber, document.Skip(offset).Take(remainder).ToArray());
+                    UpdateDocumentBufferSize(protocol, fileNumber, remainder);
+                    PushDocument(protocol, fileNumber, document.Skip(offset).Take(remainder).ToArray());
                 }
 
-                UpdateDocumentBufferSize(engine, fileNumber, 0);
-                SetDocumentEof(engine, fileNumber);
+                UpdateDocumentBufferSize(protocol, fileNumber, 0);
+                SetDocumentEof(protocol, fileNumber);
 
                 return addDocumentResponse;
             }
             catch (Exception ex)
             {
-                engine.Logger(ex);
+                protocol.Logger(ex);
                 return null;
             }
         }
 
-        private static GetBinaryFileResponseMessage GetBinaryFile(IEngine engine, string documentPath, string documentName)
+        private static GetBinaryFileResponseMessage GetBinaryFile(SLProtocol protocol, string documentPath, string documentName)
         {
             var message = new GetBinaryFileMessage
             {
@@ -428,10 +427,10 @@ namespace Auctus.DataMiner.Library.Automation
                 Map = documentPath,
             };
 
-            return engine.SendSLNetSingleResponseMessage(message) as GetBinaryFileResponseMessage;
+            return protocol.SLNet.SendSingleResponseMessage(message) as GetBinaryFileResponseMessage;
         }
 
-        private static PullDocumentResponseMessage PullDocument(IEngine engine, int fileNumber, int start, int length)
+        private static PullDocumentResponseMessage PullDocument(SLProtocol protocol, int fileNumber, int start, int length)
         {
             var message = new PullDocumentMessage
             {
@@ -440,77 +439,61 @@ namespace Auctus.DataMiner.Library.Automation
                 Start = start,
             };
 
-            return engine.SendSLNetSingleResponseMessage(message) as PullDocumentResponseMessage;
+            return protocol.SLNet.SendSingleResponseMessage(message) as PullDocumentResponseMessage;
         }
 
-        private static AddDocumentResponseMessage AddDocument(IEngine engine, string documentPath, string documentName, int bufferSize)
+        private static AddDocumentResponseMessage AddDocument(SLProtocol protocol, string documentPath, string documentName, int bufferSize)
         {
-            try
+            var message = new AddDocumentMessage
             {
-                var serverDetails = engine.GetUserConnection().ServerDetails;
+                BufferSize = bufferSize,
+                DataMinerID = protocol.DataMinerID,
+                Element = documentPath,
+                FileSize = 0,
+                HostingDataMinerID = protocol.DataMinerID,
+                Name = documentName,
+            };
 
-                var message = new AddDocumentMessage
-                {
-                    BufferSize = bufferSize,
-                    DataMinerID = serverDetails.AgentID,
-                    Element = documentPath,
-                    FileSize = 0,
-                    HostingDataMinerID = serverDetails.AgentID,
-                    Name = documentName,
-                };
-
-                return engine.SendSLNetSingleResponseMessage(message) as AddDocumentResponseMessage;
-            }
-            catch (Exception ex)
-            {
-                engine.Logger(ex);
-                return null;
-            }
+            return protocol.SLNet.SendSingleResponseMessage(message) as AddDocumentResponseMessage;
         }
 
-        private static void PushDocument(IEngine engine, int fileNumber, byte[] document)
+        private static void PushDocument(SLProtocol protocol, int fileNumber, byte[] document)
         {
-            var serverDetails = engine.GetUserConnection().ServerDetails;
-
             var message = new PushDocumentMessage
             {
                 Ba = new BA(document),
-                DataMinerID = serverDetails.AgentID,
+                DataMinerID = protocol.DataMinerID,
                 FileNr = fileNumber,
-                HostingDataMinerID = serverDetails.AgentID,
+                HostingDataMinerID = protocol.DataMinerID,
                 Size = document.Length,
             };
 
-            engine.SendSLNetMessage(message);
+            protocol.SLNet.SendMessages(message);
         }
 
-        private static void UpdateDocumentBufferSize(IEngine engine, int fileNumber, int bufferSize)
+        private static void UpdateDocumentBufferSize(SLProtocol protocol, int fileNumber, int bufferSize)
         {
-            var serverDetails = engine.GetUserConnection().ServerDetails;
-
             var message = new UpdateDocumentBufferSizeMessage
             {
-                DataMinerID = serverDetails.AgentID,
+                DataMinerID = protocol.DataMinerID,
                 FileNr = fileNumber,
-                HostingDataMinerID = serverDetails.AgentID,
+                HostingDataMinerID = protocol.DataMinerID,
                 Size = bufferSize,
             };
 
-            engine.SendSLNetMessage(message);
+            protocol.SLNet.SendMessages(message);
         }
 
-        private static void SetDocumentEof(IEngine engine, int fileNumber)
+        private static void SetDocumentEof(SLProtocol protocol, int fileNumber)
         {
-            var serverDetails = engine.GetUserConnection().ServerDetails;
-
             var message = new SetDocumentEofMessage
             {
-                DataMinerID = serverDetails.AgentID,
+                DataMinerID = protocol.DataMinerID,
                 FileNr = fileNumber,
-                HostingDataMinerID = serverDetails.AgentID,
+                HostingDataMinerID = protocol.DataMinerID,
             };
 
-            engine.SendSLNetMessage(message);
+            protocol.SLNet.SendMessages(message);
         }
     }
 }

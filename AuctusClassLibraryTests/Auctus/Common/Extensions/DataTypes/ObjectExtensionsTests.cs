@@ -110,16 +110,16 @@ namespace Auctus.DataMiner.Library.Common.Type.Tests
             object validObjectDouble = 1234.56d;
             object nullObject = null;
 
-            validObjectInt.FromOADate(true).Should().Be(new DateTime(1903, 5, 18));
-            validObjectInt.FromOADate(false).Should().Be(new DateTime(1903, 5, 18));
+            validObjectInt.FromOADate(true).Should().Be(new DateTime(1903, 5, 18, 0, 0, 0, DateTimeKind.Local));
+            validObjectInt.FromOADate(false).Should().Be(new DateTime(1903, 5, 18, 0, 0, 0, DateTimeKind.Local));
 
-            validObjectString.FromOADate(true).Should().Be(new DateTime(1903, 5, 18, 13, 26, 24));
-            validObjectString.FromOADate(false).Should().Be(new DateTime(1903, 5, 18, 13, 26, 24));
+            validObjectString.FromOADate(true).Should().Be(new DateTime(1903, 5, 18, 13, 26, 24, DateTimeKind.Local));
+            validObjectString.FromOADate(false).Should().Be(new DateTime(1903, 5, 18, 13, 26, 24, DateTimeKind.Local));
 
-            validObjectDouble.FromOADate(true).Should().Be(new DateTime(1903, 5, 18, 13, 26, 24));
-            validObjectDouble.FromOADate(false).Should().Be(new DateTime(1903, 5, 18, 13, 26, 24));
+            validObjectDouble.FromOADate(true).Should().Be(new DateTime(1903, 5, 18, 13, 26, 24, DateTimeKind.Local));
+            validObjectDouble.FromOADate(false).Should().Be(new DateTime(1903, 5, 18, 13, 26, 24, DateTimeKind.Local));
 
-            nullObject.FromOADate(true).Should().Be(new DateTime(1899, 12, 30));
+            nullObject.FromOADate(true).Should().Be(new DateTime(1899, 12, 30, 0, 0, 0, DateTimeKind.Local));
             Invoking(() => nullObject.FromOADate(false)).Should().Throw<ArgumentException>();
         }
 

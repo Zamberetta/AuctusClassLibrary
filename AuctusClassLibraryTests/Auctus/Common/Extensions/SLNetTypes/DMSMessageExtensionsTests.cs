@@ -18,7 +18,7 @@ namespace Auctus.DataMiner.Library.Common.Type.Tests
             var dmsMessage3 = new Mock<GetProtocolsResponseMessage>().Object;
 
             var dmsMessageArray = new DMSMessage[] { dmsMessage1, dmsMessage2, dmsMessage3 };
-            var cast = DmsMessageExtensions.CastDMSMessage<GetProtocolsResponseMessage>(dmsMessageArray).ToArray();
+            var cast = dmsMessageArray.CastDMSMessage<GetProtocolsResponseMessage>().ToArray();
 
             cast.Should().BeOfType(typeof(GetProtocolsResponseMessage[])).And.HaveCount(3);
         }

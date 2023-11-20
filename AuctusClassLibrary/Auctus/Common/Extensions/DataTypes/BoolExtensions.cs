@@ -1,5 +1,8 @@
 ﻿namespace Auctus.DataMiner.Library.Common.Type
 {
+    /// <summary>
+    ///   Extension methods for the bool type.
+    /// </summary>
     public static class BoolExtensions
     {
         /// <summary>Converts the boolean representation to an integer.</summary>

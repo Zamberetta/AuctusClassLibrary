@@ -1,31 +1,15 @@
-﻿using System;
-
-#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
+﻿using Auctus.DataMiner.Library.Auctus.Common;
+using System;
 
 namespace Auctus.DataMiner.Library.Common.Type
 {
+    /// <summary>
+    ///   Extension methods for the TimeSpan type.
+    /// </summary>
     public static class TimeSpanExtensions
     {
-        [Flags]
-        public enum Format : long
-        {
-            Years = 31536000000,
-            Weeks = 604800000,
-            Days = 86400000,
-            Hours = 3600000,
-            Minutes = 60000,
-            Seconds = 1000,
-            Milliseconds = 1,
-
-            All = LongDate | LongTime,
-            Date = Weeks | Days,
-            LongDate = Years | Weeks | Days,
-            Time = Hours | Minutes | Seconds,
-            ShortTime = Hours | Minutes,
-            LongTime = Hours | Minutes | Seconds | Milliseconds,
-        }
-
         /// <summary>Converts the TimeSpan representation to a readable string.</summary>
+        /// <param name="span">The target TimeSpan.</param>
         /// <param name="simplified">If set to <c>true</c>, 5h 5m 43s; Otherwise, 5 hours 5 minutes 43 seconds.</param>
         /// <param name="format">The desired format.</param>
         /// <returns>
@@ -33,17 +17,17 @@ namespace Auctus.DataMiner.Library.Common.Type
         ///   <br />
         ///   Simplified: 3y 48w 6d 5h 5m 43s 12ms
         /// </returns>
-        public static string ToReadableString(this TimeSpan span, bool simplified = false, Format format = Format.All)
+        public static string ToReadableString(this TimeSpan span, bool simplified = false, TimeSpanFormat format = TimeSpanFormat.All)
         {
             var totalMilliseconds = span.Duration().TotalMilliseconds;
 
-            var years = format.CalculateComponent(Format.Years, simplified, ref totalMilliseconds);
-            var weeks = format.CalculateComponent(Format.Weeks, simplified, ref totalMilliseconds);
-            var days = format.CalculateComponent(Format.Days, simplified, ref totalMilliseconds);
-            var hours = format.CalculateComponent(Format.Hours, simplified, ref totalMilliseconds);
-            var minutes = format.CalculateComponent(Format.Minutes, simplified, ref totalMilliseconds);
-            var seconds = format.CalculateComponent(Format.Seconds, simplified, ref totalMilliseconds);
-            var milliseconds = format.CalculateComponent(Format.Milliseconds, simplified, ref totalMilliseconds);
+            var years = format.CalculateComponent(TimeSpanFormat.Years, simplified, ref totalMilliseconds);
+            var weeks = format.CalculateComponent(TimeSpanFormat.Weeks, simplified, ref totalMilliseconds);
+            var days = format.CalculateComponent(TimeSpanFormat.Days, simplified, ref totalMilliseconds);
+            var hours = format.CalculateComponent(TimeSpanFormat.Hours, simplified, ref totalMilliseconds);
+            var minutes = format.CalculateComponent(TimeSpanFormat.Minutes, simplified, ref totalMilliseconds);
+            var seconds = format.CalculateComponent(TimeSpanFormat.Seconds, simplified, ref totalMilliseconds);
+            var milliseconds = format.CalculateComponent(TimeSpanFormat.Milliseconds, simplified, ref totalMilliseconds);
 
             var formatted = string.Format("{0}{1}{2}{3}{4}{5}{6}",
             years,
@@ -67,13 +51,13 @@ namespace Auctus.DataMiner.Library.Common.Type
             return formatted;
         }
 
-        private static string CalculateComponent(this Format format, Format targetFormat, bool simplified, ref double totalMilliseconds)
+        private static string CalculateComponent(this TimeSpanFormat format, TimeSpanFormat targetFormat, bool simplified, ref double totalMilliseconds)
         {
             var total = 0d;
 
             if (format.HasFlag(targetFormat))
             {
-                var calculatedTotal = targetFormat == Format.Milliseconds ? totalMilliseconds : Math.Floor(totalMilliseconds / (double)targetFormat);
+                var calculatedTotal = targetFormat == TimeSpanFormat.Milliseconds ? totalMilliseconds : Math.Floor(totalMilliseconds / (double)targetFormat);
 
                 if (calculatedTotal > 0)
                 {
@@ -99,42 +83,38 @@ namespace Auctus.DataMiner.Library.Common.Type
             }
         }
 
-        private static string ComponentName(this Format format, bool simplified)
+        private static string ComponentName(this TimeSpanFormat format, bool simplified)
         {
-            string componentName;
+            string componentName = string.Empty;
 
             switch (format)
             {
-                case Format.Years:
+                case TimeSpanFormat.Years:
                     componentName = simplified ? "y" : "year";
                     break;
 
-                case Format.Weeks:
+                case TimeSpanFormat.Weeks:
                     componentName = simplified ? "w" : "week";
                     break;
 
-                case Format.Days:
+                case TimeSpanFormat.Days:
                     componentName = simplified ? "d" : "day";
                     break;
 
-                case Format.Hours:
+                case TimeSpanFormat.Hours:
                     componentName = simplified ? "h" : "hour";
                     break;
 
-                case Format.Minutes:
+                case TimeSpanFormat.Minutes:
                     componentName = simplified ? "m" : "minute";
                     break;
 
-                case Format.Seconds:
+                case TimeSpanFormat.Seconds:
                     componentName = simplified ? "s" : "second";
                     break;
 
-                case Format.Milliseconds:
+                case TimeSpanFormat.Milliseconds:
                     componentName = simplified ? "ms" : "millisecond";
-                    break;
-
-                default:
-                    componentName = string.Empty;
                     break;
             }
 

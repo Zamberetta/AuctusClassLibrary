@@ -1,27 +1,16 @@
 ﻿namespace Auctus.DataMiner.Library.Protocol
 {
+    using global::Auctus.DataMiner.Library.Auctus.Common;
     using Skyline.DataMiner.Net.Messages;
     using Skyline.DataMiner.Scripting;
     using System;
     using System.Linq;
 
+    /// <summary>
+    /// Methods that aid with retrieving user info.
+    /// </summary>
     public static class User
     {
-        public class UserInfo
-        {
-            public string Name { get; set; }
-
-            public string FullName { get; set; }
-
-            public string Email { get; set; }
-
-            public string Telephone { get; set; }
-
-            public string Pager { get; set; }
-
-            public string[] Groups { get; set; }
-        }
-
         /// <summary>Retrieves the account name for user that triggered the QAction.</summary>
         /// <param name="protocol">Instance that implements SLProtocol.</param>
         public static string GetUser(SLProtocol protocol)

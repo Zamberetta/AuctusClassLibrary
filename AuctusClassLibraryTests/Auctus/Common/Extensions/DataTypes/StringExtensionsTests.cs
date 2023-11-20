@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Auctus.DataMiner.Library.Auctus.Common;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using static FluentAssertions.FluentActions;
@@ -37,23 +38,23 @@ namespace Auctus.DataMiner.Library.Common.Type.Tests
         {
             var timespan = TimeSpan.MaxValue;
 
-            timespan.ToReadableString(false, TimeSpanExtensions.Format.All).ParseReadableTimeSpan().Should().Be(timespan);
-            timespan.ToReadableString(true, TimeSpanExtensions.Format.All).ParseReadableTimeSpan().Should().Be(timespan);
+            timespan.ToReadableString(false, TimeSpanFormat.All).ParseReadableTimeSpan().Should().Be(timespan);
+            timespan.ToReadableString(true, TimeSpanFormat.All).ParseReadableTimeSpan().Should().Be(timespan);
 
             timespan = new TimeSpan(1, 1, 1, 1, 1);
 
-            timespan.ToReadableString(false, TimeSpanExtensions.Format.All).ParseReadableTimeSpan().Should().Be(timespan);
-            timespan.ToReadableString(true, TimeSpanExtensions.Format.All).ParseReadableTimeSpan().Should().Be(timespan);
+            timespan.ToReadableString(false, TimeSpanFormat.All).ParseReadableTimeSpan().Should().Be(timespan);
+            timespan.ToReadableString(true, TimeSpanFormat.All).ParseReadableTimeSpan().Should().Be(timespan);
 
             timespan = TimeSpan.FromDays(12345);
 
-            timespan.ToReadableString(false, TimeSpanExtensions.Format.Days).ParseReadableTimeSpan().Should().Be(timespan);
-            timespan.ToReadableString(true, TimeSpanExtensions.Format.Days).ParseReadableTimeSpan().Should().Be(timespan);
+            timespan.ToReadableString(false, TimeSpanFormat.Days).ParseReadableTimeSpan().Should().Be(timespan);
+            timespan.ToReadableString(true, TimeSpanFormat.Days).ParseReadableTimeSpan().Should().Be(timespan);
 
             timespan = new TimeSpan(12, 34, 56);
 
-            timespan.ToReadableString(false, TimeSpanExtensions.Format.Time).ParseReadableTimeSpan().Should().Be(timespan);
-            timespan.ToReadableString(true, TimeSpanExtensions.Format.Time).ParseReadableTimeSpan().Should().Be(timespan);
+            timespan.ToReadableString(false, TimeSpanFormat.Time).ParseReadableTimeSpan().Should().Be(timespan);
+            timespan.ToReadableString(true, TimeSpanFormat.Time).ParseReadableTimeSpan().Should().Be(timespan);
 
             string.Empty.ParseReadableTimeSpan().Should().Be(TimeSpan.Zero);
         }

@@ -1,5 +1,8 @@
 ﻿namespace Auctus.DataMiner.Library.Common
 {
+    /// <summary>
+    /// Enum used in conjunction with the GetInfo SLNet call.
+    /// </summary>
     public enum InfoTypeArray
     {
         /// <returns>

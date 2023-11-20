@@ -200,6 +200,15 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
 
             mock.Setup(x => x.SendSingleResponseMessage(It.IsAny<DMSMessage>())).Returns(() =>
             {
+                return QActionTableRowsToParameterValue(new QActionTableRow[0]);
+            });
+
+            getRowsQActionTable = mockBasicTable.GetRows<MockbasictableQActionRow>();
+
+            getRowsQActionTable.Should().BeEmpty();
+
+            mock.Setup(x => x.SendSingleResponseMessage(It.IsAny<DMSMessage>())).Returns(() =>
+            {
                 return QActionTableRowsToParameterValue(new[] { thirdRow, fourthRow });
             });
 
@@ -385,8 +394,11 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
         {
             var targetColumnPid = Mockbasictable.Pid.mockbasictablestringvalue_1002;
             var targetColumnIdx = Mockbasictable.Idx.mockbasictablestringvalue_1002;
-
             var originalValue = mockProtocol.GetParameterIndexByKey(Mockbasictable.tablePid, "1", targetColumnIdx + 1);
+
+            mockProtocol.SetColumn(Mockbasictable.tablePid, targetColumnPid, (Dictionary<string, DateTime>)null);
+
+            mockProtocol.GetParameterIndexByKey(Mockbasictable.tablePid, "1", targetColumnIdx + 1).Should().Be(originalValue);
 
             mockProtocol.SetColumn(Mockbasictable.tablePid, targetColumnPid, new Dictionary<string, DateTime>() { });
 
@@ -400,6 +412,15 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
 
             mockProtocol.GetParameterIndexByKey(Mockbasictable.tablePid, "1", targetColumnIdx + 1).Should().Be("MNO");
             mockProtocol.GetParameterIndexByKey(Mockbasictable.tablePid, "2", targetColumnIdx + 1).Should().Be("PQR");
+
+            mockBasicTable.SetColumn(targetColumnPid, new Dictionary<string, object>()
+            {
+                { "1", "STU" },
+                { "2", "VWX" },
+            });
+
+            mockProtocol.GetParameterIndexByKey(Mockbasictable.tablePid, "1", targetColumnIdx + 1).Should().Be("STU");
+            mockProtocol.GetParameterIndexByKey(Mockbasictable.tablePid, "2", targetColumnIdx + 1).Should().Be("VWX");
         }
 
         [TestMethod]

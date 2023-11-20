@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static FluentAssertions.FluentActions;
 
 namespace Auctus.DataMiner.Library.Common.Files.Tests
 {
@@ -52,6 +53,13 @@ namespace Auctus.DataMiner.Library.Common.Files.Tests
         public void GetSafeFilename_Test(string fileName, char replacementChar, string expected)
         {
             Documents.GetSafeFilename(fileName, replacementChar).Should().Be(expected);
+        }
+
+        [TestMethod()]
+        public void GetMD5_Test()
+        {
+            Documents.GetMD5($@"{testDirectory}\Testing_Duo.svg").Should().Be("6ab6cb4d5062b6d54e4f3653099adca7");
+            Invoking(() => Documents.GetMD5($@"{testDirectory}\InvalidFile.svg")).Should().Throw<FileNotFoundException>();
         }
     }
 }

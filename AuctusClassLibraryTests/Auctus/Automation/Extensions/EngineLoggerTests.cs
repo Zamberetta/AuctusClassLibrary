@@ -58,7 +58,7 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void Logger_2_Arg_Test()
         {
-            var dt = new DateTime(1, 1, 1, 13, 24, 21);
+            var dt = new DateTime(1, 1, 1, 13, 24, 21, DateTimeKind.Local);
 
             mockEngine.Logger("At {0:t}, the temperature is {1}°C.", dt, 21.3, LogType.Always, 1);
 
@@ -68,7 +68,7 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void Logger_3_Arg_Test()
         {
-            var dt = new DateTime(1, 1, 1, 9, 52, 45);
+            var dt = new DateTime(1, 1, 1, 9, 52, 45, DateTimeKind.Local);
 
             mockEngine.Logger("At {0:t}, the temperature is {1}°C and {2}.", dt, 17.1, "slightly overcast", LogType.None, 2);
 
@@ -217,6 +217,10 @@ namespace Auctus.DataMiner.Library.Automation.Tests
             mockEngine.Logger((object)null, LogType.Information, -1);
 
             logMessage.Should().Be("Information|-1|ID0|Logger_Object_Test|NULL");
+
+            mockEngine.Logger(DateTime.MinValue, LogType.Debug, -1);
+
+            logMessage.Should().Be($"Debug|-1|ID0|Logger_Object_Test|01/01/0001 12:00:00 AM");
         }
     }
 }

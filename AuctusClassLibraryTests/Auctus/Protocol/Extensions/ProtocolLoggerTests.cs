@@ -49,7 +49,7 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
         [TestMethod]
         public void Logger_2_Arg_Test()
         {
-            var dt = new DateTime(1, 1, 1, 13, 24, 21);
+            var dt = new DateTime(1, 1, 1, 13, 24, 21, DateTimeKind.Local);
 
             mockProtocol.Logger("At {0:t}, the temperature is {1}°C.", dt, 21.3, LogType.Allways, LogLevel.Level1);
 
@@ -59,7 +59,7 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
         [TestMethod]
         public void Logger_3_Arg_Test()
         {
-            var dt = new DateTime(1, 1, 1, 9, 52, 45);
+            var dt = new DateTime(1, 1, 1, 9, 52, 45, DateTimeKind.Local);
 
             mockProtocol.Logger("At {0:t}, the temperature is {1}°C and {2}.", dt, 17.1, "slightly overcast", LogType.Information, LogLevel.Level2);
 
@@ -208,6 +208,10 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
             mockProtocol.Logger((object)null, LogType.Information, LogLevel.DevelopmentLogging);
 
             mockProtocol.LastLogEntry.Should().Be("1|-1|QA123|TR456|Logger_Object_Test|NULL");
+
+            mockProtocol.Logger(DateTime.MinValue, LogType.DebugInfo, LogLevel.DevelopmentLogging);
+
+            mockProtocol.LastLogEntry.Should().Be("4|-1|QA123|TR456|Logger_Object_Test|01/01/0001 12:00:00 AM");
         }
     }
 }

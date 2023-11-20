@@ -7,6 +7,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    ///   Extension methods for the QActionTable type.
+    /// </summary>
     public static class QActionTableExtensions
     {
         /// <summary>Removes all rows from the specified table.</summary>
@@ -85,27 +88,9 @@
                     return rows;
                 }
 
-                var tableColumns = response.NewValue.ArrayValue;
-                var columnCount = tableColumns.Length;
-                var rowCount = columnCount > 0 ? tableColumns[0].ArrayValue.Length : 0;
-                var rowValues = new Dictionary<int, object>[rowCount];
+                var tableRows = ColumnsToRows(response.NewValue.ArrayValue);
 
-                for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
-                {
-                    var columnCells = tableColumns[columnIndex].ArrayValue;
-
-                    for (var rowIndex = 0; rowIndex < columnCells.Length; rowIndex++)
-                    {
-                        if (rowValues[rowIndex] == null)
-                        {
-                            rowValues[rowIndex] = new Dictionary<int, object>();
-                        }
-
-                        rowValues[rowIndex].Add(columnIndex, columnCells[rowIndex].IsEmpty ? null : columnCells[rowIndex].ArrayValue[0].InteropValue);
-                    }
-                }
-
-                foreach (var rowDict in rowValues)
+                foreach (var rowDict in tableRows)
                 {
                     rows.Add(new TQActionTableRow
                     {
@@ -239,7 +224,7 @@
 
             var values = keyValues.Values is ICollection<object> ? keyValues.Values as ICollection<object> : keyValues.Values.Cast<object>();
 
-            var tableData = new object[] { keyValues.Keys.ToArray<object>(), (values == null ? Array.Empty<object>() : values).ToArray() };
+            var tableData = new object[] { keyValues.Keys.ToArray<object>(), values.ToArray() };
 
             protocol.NotifyProtocol((int)NotifyType.NT_FILL_ARRAY_WITH_COLUMN, tableInfo, tableData);
         }
@@ -323,6 +308,31 @@
             where TQActionTableRow : QActionTableRow, new()
         {
             return table.FillArrayNoDelete(rows.ToArray<QActionTableRow>(), timeInfo);
+        }
+
+        private static Dictionary<int, object>[] ColumnsToRows(ParameterValue[] columns)
+        {
+            var tableColumns = columns;
+            var columnCount = tableColumns.Length;
+            var rowCount = columnCount > 0 ? tableColumns[0].ArrayValue.Length : 0;
+            var rows = new Dictionary<int, object>[rowCount];
+
+            for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
+            {
+                var columnCells = tableColumns[columnIndex].ArrayValue;
+
+                for (var rowIndex = 0; rowIndex < columnCells.Length; rowIndex++)
+                {
+                    if (rows[rowIndex] == null)
+                    {
+                        rows[rowIndex] = new Dictionary<int, object>();
+                    }
+
+                    rows[rowIndex].Add(columnIndex, columnCells[rowIndex].IsEmpty ? null : columnCells[rowIndex].ArrayValue[0].InteropValue);
+                }
+            }
+
+            return rows;
         }
     }
 }

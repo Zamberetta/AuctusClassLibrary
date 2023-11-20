@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Auctus.DataMiner.Library.Common.Type
 {
+    /// <summary>
+    ///   Extension methods for the StringBuilder type.
+    /// </summary>
     public static class StringBuilderExtensions
     {
         private static Dictionary<StringBuilder, string> _lastStrings = new Dictionary<StringBuilder, string>(ObjectReferenceEqualityComparer.Instance);
@@ -46,7 +49,6 @@ namespace Auctus.DataMiner.Library.Common.Type
 
             return sb.AppendLine(value);
         }
-
 
         /// <summary>Returns the zero-based index position of the last occurrence of a specified Unicode character within this instance.</summary>
         /// <param name="sb">The StringBuilder instance.</param>

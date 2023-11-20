@@ -3,6 +3,9 @@ using Skyline.DataMiner.Scripting;
 
 namespace Auctus.DataMiner.Library.Protocol
 {
+    /// <summary>
+    /// Methods that aid with dealing with protocol documents.
+    /// </summary>
     public static class ProtocolDocuments
     {
         /// <summary>Returns the DataMiner documents path for the specified protocol.</summary>

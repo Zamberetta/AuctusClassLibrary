@@ -3,16 +3,16 @@ using Auctus.DataMiner.Library.Common;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Skyline.DataMiner.Automation;
 using Skyline.DataMiner.Net;
 using Skyline.DataMiner.Net.Messages;
 using Skyline.DataMiner.Net.Messages.Advanced;
+using Skyline.DataMiner.Scripting;
 using System;
 using System.Globalization;
 using System.Linq;
 using static FluentAssertions.FluentActions;
 
-namespace Auctus.DataMiner.Library.Automation.Tests
+namespace Auctus.DataMiner.Library.Protocol.Tests
 {
     [TestClass]
     public class SLNetTests
@@ -20,15 +20,15 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void SendDmsFileChange_Test()
         {
-            var mock = new Mock<Engine>();
+            var mock = new Mock<SLProtocol>();
             var logMessage = string.Empty;
 
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<DMSMessage>())).Returns(() => new SetDataMinerInfoResponseMessage() { iRet = 0 });
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<DMSMessage>())).Returns(() => new SetDataMinerInfoResponseMessage() { iRet = 0 });
             mock.Setup(x => x.GetUserConnection().ServerDetails).Returns(() => new ServerDetails() { AgentID = 1234 });
-            mock.Setup(x => x.Log(It.IsAny<string>(), It.IsAny<LogType>(), It.IsAny<int>()))
-                .Callback<string, LogType, int>((message, logType, logLevel) =>
+            mock.Setup(x => x.Log(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+                .Callback<int, int, string>((iType, iLevel, message) =>
                 {
-                    logMessage = $"{logType}|{logLevel}|{message}";
+                    logMessage = $"{iType}|{iLevel}|{message}";
                 });
 
             SLNet.SendDmsFileChange(mock.Object, @"C:\SkylineDataMiner\ProtocolScripts\Epic.dll").Should().NotBeNull();
@@ -41,11 +41,11 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void ChangeCommunicationState_Test()
         {
-            var mock = new Mock<Engine>();
+            var mock = new Mock<SLProtocol>();
             SetDataMinerInfoMessage setDataMinerInfoMessage = null;
 
             mock.Setup(x => x.GetUserConnection().ServerDetails).Returns(() => new ServerDetails() { AgentID = 1234 });
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<DMSMessage>()))
                 .Returns(() => new SetDataMinerInfoResponseMessage() { iRet = 0 })
                 .Callback<DMSMessage>((dmsMessage) =>
                 {
@@ -62,7 +62,7 @@ namespace Auctus.DataMiner.Library.Automation.Tests
             setDataMinerInfoMessage.IInfo1.Should().Be(-1);
             setDataMinerInfoMessage.Uia1.Uia.Last().Should().Be(0);
 
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<DMSMessage>()))
                 .Returns(() =>
                 {
                     throw new ArgumentException("Unhandled exception has occurred.");
@@ -74,10 +74,10 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void GetInfo_Single_Test()
         {
-            var mock = new Mock<Engine>();
+            var mock = new Mock<SLProtocol>();
             GetInfoMessage getInfoMessage = null;
 
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<DMSMessage>()))
                 .Callback<DMSMessage>((dmsMessage) =>
                 {
                     getInfoMessage = (GetInfoMessage)dmsMessage;
@@ -87,7 +87,7 @@ namespace Auctus.DataMiner.Library.Automation.Tests
 
             getInfoMessage.Type.Should().Be(InfoType.Licenses);
 
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<DMSMessage>()))
                 .Returns(() =>
                 {
                     throw new ArgumentException("Unhandled exception has occurred.");
@@ -99,10 +99,10 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void GetInfo_Array_Test()
         {
-            var mock = new Mock<Engine>();
+            var mock = new Mock<SLProtocol>();
             GetInfoMessage getInfoMessage = null;
 
-            mock.Setup(x => x.SendSLNetMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendMessage(It.IsAny<DMSMessage>()))
                 .Callback<DMSMessage>((dmsMessage) =>
                 {
                     getInfoMessage = (GetInfoMessage)dmsMessage;
@@ -112,7 +112,7 @@ namespace Auctus.DataMiner.Library.Automation.Tests
 
             getInfoMessage.Type.Should().Be(InfoType.Protocols);
 
-            mock.Setup(x => x.SendSLNetMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendMessage(It.IsAny<DMSMessage>()))
                 .Returns(() =>
                 {
                     throw new ArgumentException("Unhandled exception has occurred.");
@@ -124,13 +124,13 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void GetAvailableAlarmTemplates_Test()
         {
-            var mock = new Mock<Engine>();
+            var mock = new Mock<SLProtocol>();
             var logMessage = string.Empty;
 
-            mock.Setup(x => x.Log(It.IsAny<string>(), It.IsAny<LogType>(), It.IsAny<int>()))
-                .Callback<string, LogType, int>((message, logType, logLevel) =>
+            mock.Setup(x => x.Log(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+                .Callback<int, int, string>((iType, iLevel, message) =>
                 {
-                    logMessage = $"{logType}|{logLevel}|{message}";
+                    logMessage = $"{iType}|{iLevel}|{message}";
                 });
 
             SLNet.GetAvailableAlarmTemplates(mock.Object, string.Empty, "1.0.0.1").Should().BeNull();
@@ -139,7 +139,7 @@ namespace Auctus.DataMiner.Library.Automation.Tests
             SLNet.GetAvailableAlarmTemplates(mock.Object, "Test Protocol", null).Should().BeNull();
             logMessage.Should().Contain("Exception => System.ArgumentException Protocol Version cannot be null, empty or white space.");
 
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<DMSMessage>())).Returns(() => new GetAvailableAlarmTemplatesResponse() { Templates = new AlarmTemplateMetaInfo[] { } });
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<DMSMessage>())).Returns(() => new GetAvailableAlarmTemplatesResponse() { Templates = new AlarmTemplateMetaInfo[] { } });
 
             SLNet.GetAvailableAlarmTemplates(mock.Object, "Test Protocol", "1.0.0.1").Should().NotBeNull();
         }
@@ -147,11 +147,11 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void UpdateAlarmTemplate_Test()
         {
-            var mock = new Mock<Engine>();
+            var mock = new Mock<SLProtocol>();
 
             Invoking(() => SLNet.UpdateAlarmTemplate(mock.Object, null, string.Empty, UpdateAlarmTemplateType.New)).Should().Throw<ArgumentException>();
 
-            mock.Setup(x => x.SendSLNetMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendMessage(It.IsAny<DMSMessage>()))
                 .Returns(() => new DMSMessage[0]);
 
             Invoking(() => SLNet.UpdateAlarmTemplate(mock.Object, null, "Alarm Template", UpdateAlarmTemplateType.New)).Should().NotThrow();
@@ -160,12 +160,12 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void DeleteDocument_Test()
         {
-            var mock = new Mock<Engine>();
+            var mock = new Mock<SLProtocol>();
 
             Invoking(() => SLNet.DeleteDocument(mock.Object, string.Empty, "MockDocument.xml")).Should().Throw<ArgumentException>();
             Invoking(() => SLNet.DeleteDocument(mock.Object, "MockElement", null)).Should().Throw<ArgumentException>();
 
-            mock.Setup(x => x.SendSLNetMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendMessage(It.IsAny<DMSMessage>()))
                 .Returns(() => new DMSMessage[0]);
 
             Invoking(() => SLNet.DeleteDocument(mock.Object, "MockElement", "MockDocument.xml")).Should().NotThrow();
@@ -174,17 +174,20 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void GetAvailableDocuments_Test()
         {
-            var mock = new Mock<Engine>();
+            var mock = new Mock<SLProtocol>();
             var logMessage = string.Empty;
 
-            mock.Setup(x => x.Log(It.IsAny<string>(), It.IsAny<LogType>(), It.IsAny<int>()))
-                .Callback<string, LogType, int>((message, logType, logLevel) =>
+            mock.Setup(x => x.Log(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+                .Callback<int, int, string>((iType, iLevel, message) =>
                 {
-                    logMessage = $"{logType}|{logLevel}|{message}";
+                    logMessage = $"{iType}|{iLevel}|{message}";
                 });
 
             SLNet.GetAvailableDocuments(mock.Object, string.Empty).Should().BeEmpty();
             logMessage.Should().Contain("Exception => System.ArgumentException Folder cannot be null, empty or white space.");
+
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<DMSMessage>()))
+                .Returns(() => null);
 
             SLNet.GetAvailableDocuments(mock.Object, "MockProtocol").Should().BeEmpty();
             logMessage.Should().Contain("Exception => System.ArgumentException Failed to get a valid documents response.");
@@ -224,7 +227,7 @@ namespace Auctus.DataMiner.Library.Automation.Tests
                 }),
             };
 
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<DMSMessage>()))
                 .Returns(() => response);
 
             var documents = SLNet.GetAvailableDocuments(mock.Object, "MockProtocol");
@@ -237,13 +240,13 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void GetDocument_Test()
         {
-            var mock = new Mock<Engine>();
+            var mock = new Mock<SLProtocol>();
             var logMessage = string.Empty;
 
-            mock.Setup(x => x.Log(It.IsAny<string>(), It.IsAny<LogType>(), It.IsAny<int>()))
-                .Callback<string, LogType, int>((message, logType, logLevel) =>
+            mock.Setup(x => x.Log(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+                .Callback<int, int, string>((iType, iLevel, message) =>
                 {
-                    logMessage = $"{logType}|{logLevel}|{message}";
+                    logMessage = $"{iType}|{iLevel}|{message}";
                 });
 
             SLNet.GetDocument(mock.Object, string.Empty, "AlarmTemplate.xml").Should().BeEmpty();
@@ -260,10 +263,10 @@ namespace Auctus.DataMiner.Library.Automation.Tests
             mock.Setup(x => x.GetUserConnection().ServerDetails)
                 .Returns(() => new ServerDetails() { AgentID = 1234 });
 
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<GetBinaryFileMessage>()))
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<GetBinaryFileMessage>()))
                 .Returns(() => new GetBinaryFileResponseMessage() { FileNr = 1, Size = fileSize });
 
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<PullDocumentMessage>()))
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<PullDocumentMessage>()))
                 .Returns<PullDocumentMessage>((message) =>
                 {
                     var bytes = new byte[message.Length];
@@ -283,18 +286,18 @@ namespace Auctus.DataMiner.Library.Automation.Tests
         [TestMethod]
         public void AddDocument_Test()
         {
-            var mock = new Mock<Engine>();
+            var mock = new Mock<SLProtocol>();
             var logMessage = string.Empty;
             var validDocumentResponse = true;
 
-            mock.Setup(x => x.SendSLNetMessage(It.IsAny<DMSMessage>()));
+            mock.Setup(x => x.SLNet.SendMessage(It.IsAny<DMSMessage>()));
             mock.Setup(x => x.GetUserConnection().ServerDetails).Returns(() => new ServerDetails() { AgentID = 1234 });
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<DMSMessage>()))
                 .Returns(() => validDocumentResponse ? new AddDocumentResponseMessage() { Ret = 1 } : null);
-            mock.Setup(x => x.Log(It.IsAny<string>(), It.IsAny<LogType>(), It.IsAny<int>()))
-                .Callback<string, LogType, int>((message, logType, logLevel) =>
+            mock.Setup(x => x.Log(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+                .Callback<int, int, string>((iType, iLevel, message) =>
                 {
-                    logMessage = $"{logType}|{logLevel}|{message}";
+                    logMessage = $"{iType}|{iLevel}|{message}";
                 });
 
             SLNet.AddDocument(mock.Object, @"DemoProtocol\New Folder", "epic.dll", new byte[163840]).Should().NotBeNull();
@@ -315,14 +318,14 @@ namespace Auctus.DataMiner.Library.Automation.Tests
 
             validDocumentResponse = true;
 
-            mock.Setup(x => x.SendSLNetSingleResponseMessage(It.IsAny<DMSMessage>()))
+            mock.Setup(x => x.SLNet.SendSingleResponseMessage(It.IsAny<DMSMessage>()))
                 .Returns(() =>
                 {
                     throw new ArgumentException("Unhandled exception has occurred.");
                 });
 
             SLNet.AddDocument(mock.Object, @"DemoProtocol\New Folder", "epic.dll", new byte[1]).Should().BeNull();
-            logMessage.Should().Contain("AddDocument|Exception => System.ArgumentException Failed to Add Document");
+            logMessage.Should().Contain("AddDocument|Exception => System.ArgumentException Unhandled exception has occurred");
         }
     }
 }

@@ -4,6 +4,9 @@
     using System.IO;
     using System.Xml.Linq;
 
+    /// <summary>
+    /// Methods that aid with dealing with XML files.
+    /// </summary>
     public static class XmlParser
     {
         /// <summary>Parses the target XML file to an XDocument.</summary>

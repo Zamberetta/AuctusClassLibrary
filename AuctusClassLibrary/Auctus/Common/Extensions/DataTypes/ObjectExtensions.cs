@@ -3,6 +3,9 @@
     using Newtonsoft.Json;
     using System;
 
+    /// <summary>
+    ///   Extension methods for the object type.
+    /// </summary>
     public static class ObjectExtensions
     {
         /// <summary>Converts the object representation to a string.</summary>

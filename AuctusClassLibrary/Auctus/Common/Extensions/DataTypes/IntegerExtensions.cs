@@ -2,6 +2,9 @@
 
 namespace Auctus.DataMiner.Library.Common.Type
 {
+    /// <summary>
+    ///   Extension methods for the int type.
+    /// </summary>
     public static class IntegerExtensions
     {
         /// <summary>Converts the integer representation to a boolean.</summary>
