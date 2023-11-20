@@ -8,7 +8,6 @@ using Skyline.DataMiner.Net.Messages;
 using Skyline.DataMiner.Net.Messages.Advanced;
 using Skyline.DataMiner.Scripting;
 using System;
-using System.Globalization;
 using System.Linq;
 using static FluentAssertions.FluentActions;
 
@@ -196,7 +195,7 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
                         name: "AlarmTemplate.xml",
                         description: "Alarm Template",
                         comments: "Template requires validation",
-                        date: DateTime.Parse("19/11/2023 12:00:00 PM", DateTimeFormatInfo.CurrentInfo),
+                        date: new DateTime(2023, 11, 19, 12, 0, 0, 0, DateTimeKind.Local),
                         isHyperlink: false,
                         hyperlink: string.Empty
                     );
@@ -205,7 +204,7 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
                         name: "https://skyline.be/sites/default/files/inline-images/logo_skylinecommunications_0.svg",
                         description: string.Empty,
                         comments: string.Empty,
-                        date: DateTime.Parse("1/04/2001 12:58:23 PM", DateTimeFormatInfo.CurrentInfo),
+                        date: new DateTime(2001, 04, 1, 12, 58, 23, 0, DateTimeKind.Local),
                         isHyperlink: true,
                         hyperlink: "https://skyline.be/sites/default/files/inline-images/logo_skylinecommunications_0.svg"
                     );

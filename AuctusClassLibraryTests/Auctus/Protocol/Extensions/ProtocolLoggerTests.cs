@@ -211,7 +211,7 @@ namespace Auctus.DataMiner.Library.Protocol.Tests
 
             mockProtocol.Logger(DateTime.MinValue, LogType.DebugInfo, LogLevel.DevelopmentLogging);
 
-            mockProtocol.LastLogEntry.Should().Be("4|-1|QA123|TR456|Logger_Object_Test|01/01/0001 12:00:00 AM");
+            mockProtocol.LastLogEntry.Should().Be($"4|-1|QA123|TR456|Logger_Object_Test|{DateTime.MinValue}");
         }
     }
 }
