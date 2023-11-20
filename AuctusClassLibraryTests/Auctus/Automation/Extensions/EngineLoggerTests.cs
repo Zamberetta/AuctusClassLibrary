@@ -220,7 +220,7 @@ namespace Auctus.DataMiner.Library.Automation.Tests
 
             mockEngine.Logger(DateTime.MinValue, LogType.Debug, -1);
 
-            logMessage.Should().Be($"Debug|-1|ID0|Logger_Object_Test|01/01/0001 12:00:00 AM");
+            logMessage.Should().Be($"Debug|-1|ID0|Logger_Object_Test|{DateTime.MinValue}");
         }
     }
 }
